@@ -1,0 +1,162 @@
+{% extends "frame.html.jinja2" %}
+{% block head %}
+    <title>Setup autofix.ci</title>
+{% endblock %}
+{% macro examplebox(filename) %}
+    <div class="card mb-3">
+        <div class="card-header p-3">
+            {{ example(filename) }}
+        </div>
+    </div>
+{% endmacro %}
+{% block body %}
+    <style>/* pygments */{{ pygments_css }}</style>
+    <style>
+        .card-header pre {
+            margin: 0;
+        }
+    </style>
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-9">
+                <div id="install-success" class="d-none alert alert-success d-none" role="alert">
+                    <div class="text-center fs-5 mb-2">
+                        Thank you for installing the <strong>autofix.ci</strong> app!
+                    </div>
+                    <div class="text-center">
+                        To finish your setup, follow the steps below.
+                    </div>
+                </div>
+
+                <h1 id="getting-started" class="mb-4">Getting Started</h1>
+
+                <p>To setup autofix.ci, do the following:</p>
+
+                <ol class="fs-5">
+                    <li id="install-step">
+                        <h2 class="fs-5">
+                            Install our <a href="https://github.com/apps/autofix-ci/installations/new" target="_blank">GitHub
+                            App</a>.</h2>
+                        <p class="fs-6">
+                            This provides autofix.ci with the necessary permissions to update pull requests.
+                        </p>
+                    </li>
+                    <li>
+                        <h2 class="fs-5">
+                            Create <samp>.github/workflows/autofix.yml</samp> with the following content:
+                        </h2>
+                        <div class="fs-6">
+                            {{ examplebox("stub.yml") }}
+                            <p>
+                                Limiting the runner's permissions and pinning the autofix action to a specific
+                                release is not required, but makes our workflow more resilient against supply chain
+                                attacks.<sup><a href="https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions">[1]</a></sup>
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <h2 class="fs-5">Add a job that auto-fixes your codebase.</h2>
+                        <p class="fs-6">
+                            Replace the comment in the file above with the code-fixing tools of your choice.<br>
+                            Take a look at the examples below!
+                        </p>
+                    </li>
+                </ol>
+
+                <h1 id="examples" class="my-4 pt-4">Examples</h1>
+
+                <p>
+                    You can combine all the example steps below, but keep them in a single job with only
+                    one call to the autofix action! :)
+                </p>
+
+                <h2 id="python">Python</h2>
+                <p>
+                    These two examples demonstrate the use of some of the most popular Python code fixing tools.
+                    We use the <a href="https://github.com/install-pinned/">@install-pinned</a> actions to
+                    install deterministic versions of all tools, but you can also <code>pip install</code>
+                    or use an existing <code>requirements.txt</code> file.
+                </p>
+
+                <strong>pyupgrade, reorder_python_imports autoflake, and black</strong>
+                {{ examplebox("python.yml") }}
+
+                <strong>ruff and black</strong>
+                {{ examplebox("python-ruff.yml") }}
+
+                <p>
+                    Of course, there's way more in the Python ecosystem! You may also want to check out
+                    <a href="https://github.com/asottile/yesqa">yesqa</a>,
+                    <a href="https://github.com/PyCQA/isort">isort</a>,
+                    <a href="https://github.com/asottile/blacken-docs">blacken-docs</a>,
+                    <a href="https://github.com/google/yapf">yapf</a>,
+                    <a href="https://github.com/hhatto/autopep8">autopep8</a>,
+                    <a href="https://github.com/PyCQA/docformatter">docformatter</a>, or
+                    <a href="https://usort.readthedocs.io/en/stable/">μsort</a>.
+                </p>
+
+                <h2 id="typescript">TypeScript / JavaScript / HTML / CSS</h2>
+                <p>
+                    Here's a simple workflow that formats your TypeScript or JavaScript code using
+                    <a href="https://prettier.io/">Prettier</a>:
+                </p>
+                {{ examplebox("typescript.yml") }}
+                <p>
+                    Alternatively, you may want to check out
+                    <a href="https://standardjs.com/">standardjs</a>!
+                </p>
+
+                <h2 id="rust">Rust</h2>
+                <p>
+                    Here's a simple workflow that <samp>rustfmt</samp>s your repo and applies clippy's suggestions:
+                </p>
+                {{ examplebox("rust.yml") }}
+                <p>
+                    You can of course switch to a different Rust toolchain first,
+                    for example if you are using nightly rustfmt.
+                </p>
+                <p>
+                    Crab fact: <strong>autocix.ci's</strong> backend is written in Rust. 🦀
+                </p>
+
+                <h2 id="go">Go</h2>
+                <p>
+                    Here's a simple workflow that <samp>gofmt</samp>s your repo:
+                </p>
+                {{ examplebox("go.yml") }}
+
+                <h2 id="images">Images</h2>
+                <p>
+                    With a bit of creativity, <strong>autofix.ci</strong> is not limited to code formatting.
+                    For example, the following workflow shrinks all PNG files:
+                </p>
+                {{ examplebox("web.yml") }}
+
+                <h2 id="pre-commit">pre-commit hooks</h2>
+                <p>
+                    If your existing workflow is based on pre-commit.com hooks, you should use
+                    <a href="https://pre-commit.ci/">pre-commit.ci</a> instead of autofix.ci.
+                    Of course, you can also integrate pre-commit hooks in your
+                    autofix.ci workflow:
+                </p>
+                {{ examplebox("pre-commit.yml") }}
+
+                <div class="text-center mt-4">
+                    <a href="https://github.com/autofix-ci/autofix.ci/blob/main/setup.html.jinja2"
+                       class="btn btn-sm btn-outline-dark d-inline-flex align-items-center">
+                        {{ icon('github') }}
+                        &nbsp;
+                        Improve this page on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        if (location.search.includes("installation_id")) {
+            document.getElementById("install-success").classList.remove("d-none");
+            document.getElementById("install-step").style.listStyleType = '"✅"';
+            document.getElementById("install-step").querySelector("h5").classList.add("text-success");
+        }
+    </script>
+{% endblock %}
